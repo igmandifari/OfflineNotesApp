@@ -159,9 +159,8 @@ Bulk deletes and individual deletes share the same undo system.
 ------------------------------------------------------------------------
 
 # Sync Simulation
-Flow:
-
-Create/Edit Note ↓ Status = Pending ↓ Simulated network request ↓ Synced
+Flow: Create/Edit Note
+Status = Pending,Simulated network request,Synced
 or Failed
 
 Failure cases are randomly simulated to demonstrate retry scenarios.
