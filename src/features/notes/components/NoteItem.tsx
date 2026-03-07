@@ -11,7 +11,16 @@ interface Props {
 
 const NoteItem = ({ note }: Props) => {
 const deleteNote = useNotesStore((s) => s.deleteNote);
-
+const getStatusColor = () => {
+    switch (note.sync_status) {
+      case 'synced':
+        return 'green';
+      case 'pending':
+        return 'orange';
+      case 'failed':
+        return 'red';
+    }
+  };
 const renderRightActions = () => {
   return (
     <TouchableOpacity
@@ -36,7 +45,9 @@ const renderRightActions = () => {
             {new Date(note.updated_at).toLocaleString()}
             </Text>
 
-            <Text style={styles.sync}>{note.sync_status}</Text>
+            <Text style={[styles.sync, { color: getStatusColor() }]}>
+            ● {note.sync_status}
+            </Text>
         </View>
         </View>
     </Swipeable>
@@ -79,7 +90,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#007AFF',
   },
-  
+
   deleteButton: {
     backgroundColor: '#ff3b30',
     justifyContent: 'center',

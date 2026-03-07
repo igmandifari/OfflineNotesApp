@@ -16,7 +16,7 @@ import EmptyState from '../components/EmptyState';
 import { Note } from '../types/note.types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/app/navigation/AppNavigator';
-
+import UndoSnackbar from '../components/UndoSnackbar';
 
 const NotesListScreen = () => {
   const {
@@ -65,7 +65,7 @@ const NotesListScreen = () => {
         ListFooterComponent={renderFooter}
         ListEmptyComponent={!loading ? <EmptyState /> : null}
       />
-
+      <UndoSnackbar />
     <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('NoteEditor')}>
         <Text style={styles.fabText}>+</Text>
     </TouchableOpacity>
