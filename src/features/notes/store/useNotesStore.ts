@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Note } from '../types/note.types';
+import { Note, SyncStatus } from '../types/note.types';
 import { NotesRepository } from '../repository/notesRepository';
 
 interface NotesState {
@@ -32,6 +32,8 @@ interface NotesState {
 
   deleteNote: (note: Note) => Promise<void>;
   undoDelete: () => void;
+
+  updateSyncStatus: (id: string, status: SyncStatus) => void;
 }
 
 export const useNotesStore = create<NotesState>((set, get) => ({
@@ -81,7 +83,10 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   },
 
   deleteSelected: async () => {
-    const { selectedNotes, notes } = get();
+    const { selectedNotes, notes, undoTimer } = get();
+    if (undoTimer) {
+      clearTimeout(undoTimer);
+    }
   
     const notesToDelete = notes.filter((n) =>
       selectedNotes.includes(n.id)
@@ -113,12 +118,18 @@ export const useNotesStore = create<NotesState>((set, get) => ({
       ? await NotesRepository.search(searchQuery, page, sortBy)
       : await NotesRepository.fetchNotes(page, sortBy);
 
-    set({
-      notes: [...notes, ...data],
-      page: page + 1,
-      hasMore: data.length > 0,
-      loading: false,
-    });
+      const merged = [...notes, ...data];
+
+      const uniqueNotes = Array.from(
+        new Map(merged.map((n) => [n.id, n])).values()
+      );
+      
+      set({
+        notes: uniqueNotes,
+        page: page + 1,
+        hasMore: data.length > 0,
+        loading: false,
+      });
   },
 
   refreshNotes: async () => {
@@ -138,7 +149,7 @@ export const useNotesStore = create<NotesState>((set, get) => ({
 
   createNote: async (title, content) => {
     const note = await NotesRepository.createNote(title, content);
-
+  
     set((state) => ({
       notes: [note, ...state.notes],
     }));
@@ -155,14 +166,20 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   },
 
   deleteNote: async (note) => {
+    const { undoTimer } = get();
+    if (undoTimer) {
+      clearTimeout(undoTimer);
+    }
+  
     const timer = setTimeout(async () => {
       await NotesRepository.deleteNote(note.id);
+  
       set({ deletedNotes: [] });
     }, 5000);
   
     set((state) => ({
       notes: state.notes.filter((n) => n.id !== note.id),
-      deletedNotes: [note],
+      deletedNotes: [...state.deletedNotes, note],
       undoTimer: timer,
     }));
   },
@@ -180,6 +197,14 @@ export const useNotesStore = create<NotesState>((set, get) => ({
       notes: [...deletedNotes, ...state.notes],
       deletedNotes: [],
       undoTimer: undefined,
+    }));
+  },
+
+  updateSyncStatus: (id, status) => {
+    set((state) => ({
+      notes: state.notes.map((n) =>
+        n.id === id ? { ...n, sync_status: status } : n
+      ),
     }));
   },
 }));

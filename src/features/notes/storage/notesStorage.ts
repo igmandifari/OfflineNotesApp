@@ -1,5 +1,5 @@
 import { executeQuery } from '@/database/Database';
-import { Note } from '../types/note.types';
+import { Note, SyncStatus } from '../types/note.types';
 
 const mapRows = (result: any) => {
   const rows = [];
@@ -113,4 +113,17 @@ export const getNotes = async (
     }
   
     return notes;
+  };
+
+  export const updateNoteStatus = async (
+    id: string,
+    status: SyncStatus
+  ) => {
+    const query = `
+      UPDATE notes
+      SET sync_status = ?
+      WHERE id = ?
+    `;
+  
+    await executeQuery(query, [status, id]);
   };

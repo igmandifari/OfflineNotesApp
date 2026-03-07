@@ -24,6 +24,22 @@ const selectedNotes = useNotesStore((s) => s.selectedNotes);
 const isSelected = selectedNotes.includes(note.id);
 const toggleSelectionMode = useNotesStore((s) => s.toggleSelectionMode);
 const toggleSelectNote = useNotesStore((s) => s.toggleSelectNote);
+const getSyncLabel = (status: string) => {
+    switch (status) {
+      case 'synced':
+        return { label: 'Synced', color: '#34C759' };
+  
+      case 'pending':
+        return { label: 'Pending', color: '#FF9F0A' };
+  
+      case 'failed':
+        return { label: 'Failed', color: '#FF3B30' };
+  
+      default:
+        return { label: '', color: '#000' };
+    }
+  };
+const sync = getSyncLabel(note.sync_status);
 const renderRightActions = () => {
   return (
     <TouchableOpacity
@@ -65,11 +81,15 @@ return (
             </Text>
           ) : null}
   
-          <View style={styles.footer}>
+        <View style={styles.footer}>
             <Text style={styles.date}>
-              {new Date(note.updated_at).toLocaleString()}
+                {new Date(note.updated_at).toLocaleString()}
             </Text>
-          </View>
+
+            <Text style={[styles.syncStatus, { color: sync.color }]}>
+                {sync.label}
+            </Text>
+            </View>
         </View>
       </Pressable>
     </Swipeable>
@@ -131,5 +151,8 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#007AFF',
     backgroundColor: '#EAF2FF',
+  },
+  syncStatus: {
+    marginLeft: 10,
   },
 });
