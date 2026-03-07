@@ -14,15 +14,14 @@ const mapRows = (result: any) => {
 export const insertNote = async (note: Note) => {
   await executeQuery(
     `INSERT INTO notes 
-    (id, title, content, created_at, updated_at, sync_status, is_deleted)
-    VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    (id, title, content, created_at, updated_at, is_deleted)
+    VALUES (?, ?, ?, ?, ?, ?)`,
     [
       note.id,
       note.title,
       note.content,
       note.created_at,
       note.updated_at,
-      note.sync_status,
       note.is_deleted,
     ]
   );
@@ -31,13 +30,12 @@ export const insertNote = async (note: Note) => {
 export const updateNote = async (note: Note) => {
   await executeQuery(
     `UPDATE notes 
-     SET title=?, content=?, updated_at=?, sync_status=? 
+     SET title=?, content=?, updated_at=?
      WHERE id=?`,
     [
       note.title,
       note.content,
       note.updated_at,
-      note.sync_status,
       note.id,
     ]
   );

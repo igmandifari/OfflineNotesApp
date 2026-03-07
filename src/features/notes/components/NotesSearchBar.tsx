@@ -1,16 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
 interface Props {
   onSearch: (text: string) => void;
 }
 
+let timer: ReturnType<typeof setTimeout>;
+
 const NotesSearchBar = ({ onSearch }: Props) => {
+  const [value, setValue] = useState('');
+
+  const handleSearch = (text: string) => {
+    setValue(text);
+
+    clearTimeout(timer);
+
+    timer = setTimeout(() => {
+      onSearch(text);
+    }, 400);
+  };
+
   return (
     <TextInput
       placeholder="Search notes..."
       style={styles.input}
-      onChangeText={onSearch}
+      value={value}
+      onChangeText={handleSearch}
     />
   );
 };
