@@ -84,12 +84,12 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   },
 
   deleteNote: async (note) => {
-    await NotesRepository.deleteNote(note.id);
-
-    const timer = setTimeout(() => {
+    const timer = setTimeout(async () => {
+      await NotesRepository.deleteNote(note.id);
+  
       set({ deletedNote: undefined });
     }, 5000);
-
+  
     set((state) => ({
       notes: state.notes.filter((n) => n.id !== note.id),
       deletedNote: note,
@@ -99,13 +99,13 @@ export const useNotesStore = create<NotesState>((set, get) => ({
 
   undoDelete: () => {
     const { deletedNote, undoTimer } = get();
-
+  
     if (!deletedNote) return;
-
+  
     if (undoTimer) {
       clearTimeout(undoTimer);
     }
-
+  
     set((state) => ({
       notes: [deletedNote, ...state.notes],
       deletedNote: undefined,

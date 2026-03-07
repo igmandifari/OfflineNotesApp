@@ -24,7 +24,7 @@ export default UndoSnackbar;
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 90,
     left: 20,
     right: 20,
     backgroundColor: '#333',
