@@ -21,6 +21,10 @@ interface NotesState {
 
   deleteNote: (note: Note) => Promise<void>;
   undoDelete: () => void;
+
+  sortBy: 'created' | 'updated';
+  setSortBy: (sort: 'created' | 'updated') => void;
+  
 }
 
 export const useNotesStore = create<NotesState>((set, get) => ({
@@ -32,15 +36,21 @@ export const useNotesStore = create<NotesState>((set, get) => ({
 
   deletedNote: undefined,
   undoTimer: undefined,
+  
+  sortBy: 'updated',
+  setSortBy: (sort) => {
+    set({ sortBy: sort, page: 0, notes: [] });
+    get().fetchNotes();
+  },
 
   fetchNotes: async () => {
-    const { page, notes, searchQuery } = get();
+    const { page, notes, searchQuery,sortBy } = get();
 
     set({ loading: true });
 
     const data = searchQuery
-      ? await NotesRepository.search(searchQuery, page)
-      : await NotesRepository.fetchNotes(page);
+        ? await NotesRepository.search(searchQuery, page, sortBy)
+        : await NotesRepository.fetchNotes(page, sortBy);
 
     set({
       notes: [...notes, ...data],

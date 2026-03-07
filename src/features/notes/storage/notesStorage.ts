@@ -50,31 +50,67 @@ export const softDeleteNote = async (id: string) => {
   );
 };
 
-export const getNotes = async (limit: number, offset: number) => {
-  const result = await executeQuery(
-    `SELECT * FROM notes 
-     WHERE is_deleted = 0
-     ORDER BY updated_at DESC
-     LIMIT ? OFFSET ?`,
-    [limit, offset]
-  );
+export const getNotes = async (
+    limit: number,
+    offset: number,
+    sortBy: 'created' | 'updated'
+  ): Promise<Note[]> => {
+    const column = sortBy === 'created' ? 'created_at' : 'updated_at';
+  
+    const query = `
+      SELECT *
+      FROM notes
+      WHERE is_deleted = 0
+      ORDER BY ${column} DESC
+      LIMIT ? OFFSET ?
+    `;
+  
+    const result = await executeQuery(query, [limit, offset]);
+  
+    const rows = result[0].rows;
+  
+    const notes: Note[] = [];
+  
+    for (let i = 0; i < rows.length; i++) {
+      notes.push(rows.item(i));
+    }
+  
+    return notes;
+  };
 
-  return mapRows(result);
-};
-
-export const searchNotes = async (
-  query: string,
-  limit: number,
-  offset: number
-) => {
-  const result = await executeQuery(
-    `SELECT * FROM notes 
-     WHERE is_deleted = 0
-     AND (title LIKE ? OR content LIKE ?)
-     ORDER BY updated_at DESC
-     LIMIT ? OFFSET ?`,
-    [`%${query}%`, `%${query}%`, limit, offset]
-  );
-
-  return mapRows(result);
-};
+  export const searchNotes = async (
+    query: string,
+    limit: number,
+    offset: number,
+    sortBy: 'created' | 'updated'
+  ): Promise<Note[]> => {
+    const column = sortBy === 'created' ? 'created_at' : 'updated_at';
+  
+    const sql = `
+      SELECT *
+      FROM notes
+      WHERE is_deleted = 0
+      AND (title LIKE ? OR content LIKE ?)
+      ORDER BY ${column} DESC
+      LIMIT ? OFFSET ?
+    `;
+  
+    const searchQuery = `%${query}%`;
+  
+    const result = await executeQuery(sql, [
+      searchQuery,
+      searchQuery,
+      limit,
+      offset,
+    ]);
+  
+    const rows = result[0].rows;
+  
+    const notes: Note[] = [];
+  
+    for (let i = 0; i < rows.length; i++) {
+      notes.push(rows.item(i));
+    }
+  
+    return notes;
+  };

@@ -17,6 +17,7 @@ import { Note } from '../types/note.types';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/app/navigation/AppNavigator';
 import UndoSnackbar from '../components/UndoSnackbar';
+import { Pressable } from 'react-native';
 
 const NotesListScreen = () => {
   const {
@@ -33,7 +34,8 @@ const NotesListScreen = () => {
     
   type NavigationProp = NativeStackNavigationProp<RootStackParamList,'NotesList'>;
   const navigation = useNavigation<NavigationProp>();
-
+  const sortBy = useNotesStore((s) => s.sortBy);
+  const setSortBy = useNotesStore((s) => s.setSortBy);
   const renderItem: ListRenderItem<Note> = useCallback(
     ({ item }) => <NoteItem note={item} />,
     []
@@ -49,7 +51,29 @@ const NotesListScreen = () => {
   return (
     <View style={styles.container}>
       <NotesSearchBar onSearch={searchNotes} />
+      <View style={styles.sortContainer}>
+        <Text style={styles.sortLabel}>Sort:</Text>
 
+        <Pressable
+            style={[
+            styles.sortButton,
+            sortBy === 'updated' && styles.sortActive,
+            ]}
+            onPress={() => setSortBy('updated')}
+        >
+            <Text>Updated</Text>
+        </Pressable>
+
+        <Pressable
+            style={[
+            styles.sortButton,
+            sortBy === 'created' && styles.sortActive,
+            ]}
+            onPress={() => setSortBy('created')}
+        >
+            <Text>Created</Text>
+        </Pressable>
+    </View>
       <FlatList
         data={notes}
         keyExtractor={(item) => item.id}
@@ -97,5 +121,27 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 28,
     fontWeight: '600',
+  },
+  sortContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  
+  sortLabel: {
+    marginRight: 8,
+    fontWeight: '500',
+  },
+  
+  sortButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
+    backgroundColor: '#eee',
+    marginRight: 8,
+  },
+  
+  sortActive: {
+    backgroundColor: '#007AFF',
   },
 });

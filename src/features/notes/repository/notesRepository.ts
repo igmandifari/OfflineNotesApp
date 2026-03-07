@@ -44,15 +44,15 @@ export const NotesRepository = {
     await softDeleteNote(id);
   },
 
-  async fetchNotes(page: number) {
+  async fetchNotes(page: number, sortBy: 'created' | 'updated') {
     const offset = page * PAGE_SIZE;
-
-    return getNotes(PAGE_SIZE, offset);
+  
+    return getNotes(PAGE_SIZE, offset, sortBy);
   },
 
-  async search(query: string, page: number) {
+  async search(query: string, page: number, sortBy: 'created' | 'updated') {
     const offset = page * PAGE_SIZE;
-
-    return searchNotes(query, PAGE_SIZE, offset);
-  },
+  
+    return searchNotes(query, PAGE_SIZE, offset, sortBy);
+  }
 };
