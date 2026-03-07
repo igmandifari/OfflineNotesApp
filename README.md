@@ -35,7 +35,8 @@ Android
 - npx react-native run-android
 
 # Running Tests
-npm test
+- npm test
+
 Tests cover storage, state logic, and UI behavior.
 
 # Key Features
