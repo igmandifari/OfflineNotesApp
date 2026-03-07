@@ -27,7 +27,8 @@ Install dependencies
 - npm install
 
 iOS
-- cd ios pod install cd ..
+- cd ios
+- pod install cd ..
 - npx react-native run-ios
 
 Android
