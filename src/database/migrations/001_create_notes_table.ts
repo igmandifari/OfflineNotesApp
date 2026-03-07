@@ -8,7 +8,6 @@ export const createNotesTable = async () => {
       content TEXT,
       created_at INTEGER,
       updated_at INTEGER,
-      sync_status TEXT,
       is_deleted INTEGER DEFAULT 0
     );
   `);

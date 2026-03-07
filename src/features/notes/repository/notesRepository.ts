@@ -9,7 +9,7 @@ import {
   searchNotes,
 } from '../storage/notesStorage';
 
-import { Note,SyncStatus } from '../types/note.types';
+import { Note } from '../types/note.types';
 
 const PAGE_SIZE = 10;
 
@@ -23,7 +23,6 @@ export const NotesRepository = {
       content,
       created_at: now,
       updated_at: now,
-      sync_status: 'pending' as SyncStatus,
       is_deleted: 0,
     };
 
@@ -36,9 +35,8 @@ export const NotesRepository = {
     const updatedNote: Note = {
       ...note,
       updated_at: dayjs().valueOf(),
-      sync_status: 'pending',
     };
-  
+
     await updateNote(updatedNote);
   },
 
