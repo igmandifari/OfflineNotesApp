@@ -19,6 +19,8 @@ state management, pagination, undo actions, and multi-select operations.
 
 # Link Video Demo Offline Contact App
 [https://github.com/igmandifari/videodemocontactapp/blob/main/demo.mp4]
+![Screen Recording 2026-03-07 at 15 00 39](https://github.com/user-attachments/assets/484cbbfc-b525-476d-8244-9acfadd7820c)
+
 
 # Running the Project
 Install dependencies
