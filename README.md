@@ -1,97 +1,165 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Created By: Igman Difari
+# Email: difariivman@gmail.com
+# Offline Notes App Test
 
-# Getting Started
+A production‑style **offline notes application** built with
+**React Native CLI** and **TypeScript**. The app demonstrates clean
+architecture, local persistence, optimistic UI updates, and simulated
+background synchronization.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+This project was created as a technical test with offline storage,
+state management, pagination, undo actions, and multi-select operations.
 
-## Step 1: Start Metro
+------------------------------------------------------------------------
+# Environment
+- Node.js: >= 22.11.0
+- React Native: 0.84.1
+- TypeScript: ^5.8.3
+- Package Manager: npm
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+# Running the Project
+Install dependencies
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- npm install
 
-```sh
-# Using npm
-npm start
+iOS
+- cd ios pod install cd ..
+- npx react-native run-ios
 
-# OR using Yarn
-yarn start
-```
+Android
+- npx react-native run-android
 
-## Step 2: Build and run your app
+# Running Tests
+npm test
+Tests cover storage, state logic, and UI behavior.
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+# Key Features
 
-### Android
+### Notes Management
+-   Create notes
+-   Edit notes
+-   Delete notes
+-   Bulk delete (multi‑select)
+-   Undo delete (5 second window)
 
-```sh
-# Using npm
-npm run android
+### Search & Sorting
+-   Debounced search
+-   Sort by **Created Date**
+-   Sort by **Last Edited**
 
-# OR using Yarn
-yarn android
-```
+### Offline First Storage
+-   SQLite local database
+-   All operations work without internet
 
-### iOS
+### Sync Status Simulation
+Each note contains a sync status indicator:
+  Status    Meaning
+  --------- ---------------------
+  Pending   waiting to sync
+  Synced    successfully synced
+  Failed    sync failed
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+The app simulates a background sync process to demonstrate how an
+offline-first architecture would behave with a remote backend.
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+### Multi Select Mode
+Users can:
+1.  Long press a note
+2.  Enter selection mode
+3.  Select multiple notes
+4.  Delete selected notes
+5.  Undo deletion
 
-```sh
-bundle install
-```
+### Swipe Gestures
+-   Swipe left to delete a note
+-   Undo deletion via snackbar
 
-Then, and every time you update your native dependencies, run:
+### Pagination
+-   Infinite scrolling list
+-   Loads notes incrementally from SQLite
 
-```sh
-bundle exec pod install
-```
+### Unit Tests
+Tests are included for core layers:
+-   Storage layer
+-   Store (state management)
+-   UI components
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+------------------------------------------------------------------------
 
-```sh
-# Using npm
-npm run ios
+# Technology Stack
+  Technology                     Purpose
+  ------------------------------ ------------------------------
+  React Native CLI               Mobile framework
+  TypeScript                     Static typing
+  SQLite                         Local persistent storage
+  Zustand                        Lightweight state management
+  React Navigation               Screen navigation
+  Jest                           Unit testing
+  React Native Gesture Handler   Swipe gestures
+  Day.js                         Date handling
 
-# OR using Yarn
-yarn ios
-```
+------------------------------------------------------------------------
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+# Architecture
+The project follows a **feature‑based architecture** with layered
+separation of concerns.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+### Layer Responsibilities
+UI Layer Screens and reusable components.
 
-## Step 3: Modify your app
+State Layer Handled by Zustand. Responsible for UI state, selection
+mode, undo logic, and pagination.
 
-Now that you have successfully run the app, let's make changes!
+Data Layer Repository pattern responsible for business logic.
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+Storage Layer Direct interaction with SQLite.
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+------------------------------------------------------------------------
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+# Data Flow
+UI ↓ Zustand Store ↓ Repository ↓ Storage ↓ SQLite
 
-## Congratulations! :tada:
+This separation ensures the codebase is maintainable, testable, and
+scalable.
 
-You've successfully run and modified your React Native App. :partying_face:
+------------------------------------------------------------------------
 
-### Now what?
+# Offline First Strategy
+The application is designed with an offline-first approach.
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+All actions such as: - creating notes - editing notes - deleting notes -
+searching notes
 
-# Troubleshooting
+are performed locally using SQLite.
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+A simulated sync system demonstrates how notes would synchronize with a
+backend server.
 
-# Learn More
+------------------------------------------------------------------------
 
-To learn more about React Native, take a look at the following resources:
+# Undo Delete System
+Behavior:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+1.  User deletes note(s)
+2.  Notes disappear from UI
+3.  Snackbar appears for 5 seconds
+4.  User may undo deletion
+5.  If no undo occurs → permanent deletion
+
+Bulk deletes and individual deletes share the same undo system.
+
+------------------------------------------------------------------------
+
+# Sync Simulation
+Flow:
+
+Create/Edit Note ↓ Status = Pending ↓ Simulated network request ↓ Synced
+or Failed
+
+Failure cases are randomly simulated to demonstrate retry scenarios.
+
+
+# Notes
+This project focuses on demonstrating: - clean architecture -
+offline-first design - maintainable code structure - scalable mobile
+application patterns

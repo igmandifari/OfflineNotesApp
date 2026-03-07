@@ -16,9 +16,12 @@
     "dayjs": "^1.11.19",
     "react": "19.2.3",
     "react-native": "0.84.1",
+    "react-native-gesture-handler": "^2.30.0",
+    "react-native-get-random-values": "^2.0.0",
     "react-native-safe-area-context": "^5.7.0",
     "react-native-screens": "^4.24.0",
     "react-native-sqlite-storage": "^6.0.1",
+    "react-native-uuid": "^2.0.3",
     "uuid": "^13.0.0",
     "zustand": "^5.0.11"
   },
