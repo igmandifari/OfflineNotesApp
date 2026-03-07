@@ -17,6 +17,9 @@ state management, pagination, undo actions, and multi-select operations.
 - TypeScript: ^5.8.3
 - Package Manager: npm
 
+# Link Video Demo Offline Contact App
+[https://github.com/igmandifari/videodemocontactapp/blob/main/demo.mp4]
+
 # Running the Project
 Install dependencies
 
