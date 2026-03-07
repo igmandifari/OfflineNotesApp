@@ -8,19 +8,37 @@ import {
 } from 'react-native';
 
 import { useNotesStore } from '../store/useNotesStore';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import { RootStackParamList } from '@/app/navigation/AppNavigator';
+
+type RouteProps = RouteProp<RootStackParamList, 'NoteEditor'>;
 
 const NoteEditorScreen = () => {
-  const createNote = useNotesStore((s) => s.createNote);
   const navigation = useNavigation();
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+  const route = useRoute<RouteProps>();
+
+  const note = route.params?.note;
+
+  const createNote = useNotesStore((s) => s.createNote);
+  const updateNote = useNotesStore((s) => s.updateNote);
+
+  const [title, setTitle] = useState(note?.title ?? '');
+  const [content, setContent] = useState(note?.content ?? '');
 
   const onSave = async () => {
     if (!title.trim()) return;
-  
-    await createNote(title, content);
-  
+
+    if (note) {
+        await updateNote({
+          ...note,
+          title,
+          content,
+        });
+      } else {
+        await createNote(title, content);
+    }
+
     navigation.goBack();
   };
 

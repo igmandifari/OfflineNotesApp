@@ -2,16 +2,23 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Note } from '../types/note.types';
 import { Swipeable } from 'react-native-gesture-handler';
+import { Pressable } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { useNotesStore } from '../store/useNotesStore';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/app/navigation/AppNavigator';
 
 interface Props {
   note: Note;
 }
-
+type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'NotesList'
+>;
 const NoteItem = ({ note }: Props) => {
 const deleteNote = useNotesStore((s) => s.deleteNote);
-
+const navigation = useNavigation<NavigationProp>();
 const renderRightActions = () => {
   return (
     <TouchableOpacity
@@ -24,21 +31,25 @@ const renderRightActions = () => {
 };
   return (
     <Swipeable renderRightActions={renderRightActions}>
-        <View style={styles.card}>
-        <Text style={styles.title}>{note.title}</Text>
+    <Pressable
+      onPress={() => navigation.navigate('NoteEditor', { note })}
+      style={styles.card}
+    >
+      <Text style={styles.title}>{note.title}</Text>
 
+      {note.content ? (
         <Text numberOfLines={2} style={styles.preview}>
-            {note.content}
+          {note.content}
         </Text>
+      ) : null}
 
-        <View style={styles.footer}>
-            <Text style={styles.date}>
-            {new Date(note.updated_at).toLocaleString()}
-            </Text>
-
-        </View>
-        </View>
-    </Swipeable>
+      <View style={styles.footer}>
+        <Text style={styles.date}>
+          {new Date(note.updated_at).toLocaleString()}
+        </Text>
+      </View>
+    </Pressable>
+  </Swipeable>
   );
 };
 

@@ -53,7 +53,7 @@ const NotesListScreen = () => {
       <FlatList
         data={notes}
         keyExtractor={(item) => item.id}
-        renderItem={renderItem}
+        renderItem={({ item }) => <NoteItem note={item} />}
         onEndReached={() => {
           if (!loading && hasMore) {
             fetchNotes();
@@ -66,7 +66,7 @@ const NotesListScreen = () => {
         ListEmptyComponent={!loading ? <EmptyState /> : null}
       />
       <UndoSnackbar />
-    <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('NoteEditor')}>
+      <TouchableOpacity style={styles.fab} onPress={() => navigation.navigate('NoteEditor', {})}>
         <Text style={styles.fabText}>+</Text>
     </TouchableOpacity>
     </View>

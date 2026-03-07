@@ -1,4 +1,4 @@
-import { v4 as uuidv4 } from 'uuid';
+import uuid from 'react-native-uuid';
 import dayjs from 'dayjs';
 
 import {
@@ -18,7 +18,7 @@ export const NotesRepository = {
     const now = dayjs().valueOf();
 
     const note: Note = {
-      id: uuidv4(),
+      id: uuid.v4() as string,
       title,
       content,
       created_at: now,
