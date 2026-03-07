@@ -16,7 +16,7 @@ const PAGE_SIZE = 10;
 const simulateSync = (id: string) => {
     setTimeout(async () => {
   
-      const success = Math.random() > 0.5; 
+      const success = Math.random() > 0.2; 
   
       if (success) {
         await updateNoteStatus(id, 'synced');

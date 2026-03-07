@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
+  Alert,
 } from 'react-native';
 
 import { useNotesStore } from '../store/useNotesStore';
@@ -27,6 +28,15 @@ const NoteEditorScreen = () => {
   const [content, setContent] = useState(note?.content ?? '');
 
   const onSave = async () => {
+    if (title.length > 100) {
+        Alert.alert('Title too long');
+        return;
+      }
+      
+      if (content.length > 5000) {
+        Alert.alert('Note content too long');
+        return;
+      }
     if (!title.trim()) return;
 
     if (note) {
@@ -49,6 +59,7 @@ const NoteEditorScreen = () => {
         style={styles.title}
         value={title}
         onChangeText={setTitle}
+        maxLength={200}
       />
 
       <TextInput
@@ -57,6 +68,7 @@ const NoteEditorScreen = () => {
         value={content}
         onChangeText={setContent}
         multiline
+        maxLength={8000}
       />
 
       <TouchableOpacity style={styles.button} onPress={onSave}>
