@@ -3,17 +3,17 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNotesStore } from '../store/useNotesStore';
 
 const UndoSnackbar = () => {
-  const deletedNote = useNotesStore((s) => s.deletedNote);
+  const deletedNotes = useNotesStore(s => s.deletedNotes)
   const undoDelete = useNotesStore((s) => s.undoDelete);
 
-  if (!deletedNote) return null;
+  if (!deletedNotes.length) return null
 
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Note deleted</Text>
 
       <TouchableOpacity onPress={undoDelete}>
-        <Text style={styles.undo}>UNDO</Text>
+        <Text style={styles.undo}>{deletedNotes.length} notes deleted [UNDO]</Text>
       </TouchableOpacity>
     </View>
   );

@@ -28,25 +28,29 @@ const NotesListScreen = () => {
     refreshNotes,
     searchNotes,
   } = useNotesStore();
-  useEffect(() => {
-      fetchNotes();
-    }, []);
-    
   type NavigationProp = NativeStackNavigationProp<RootStackParamList,'NotesList'>;
   const navigation = useNavigation<NavigationProp>();
   const sortBy = useNotesStore((s) => s.sortBy);
   const setSortBy = useNotesStore((s) => s.setSortBy);
   const renderItem: ListRenderItem<Note> = useCallback(
-    ({ item }) => <NoteItem note={item} />,
-    []
-  );
-
-  const renderFooter = () => {
-    if (!loading) return null;
-
-    return <ActivityIndicator style={{ margin: 20 }} />;
-  };
-
+      ({ item }) => <NoteItem note={item} />,
+      []
+    );
+    
+    const renderFooter = () => {
+        if (!loading) return null;
+        
+        return <ActivityIndicator style={{ margin: 20 }} />;
+    };
+    
+    const selectionMode = useNotesStore((s) => s.selectionMode);
+    const selectedNotes = useNotesStore((s) => s.selectedNotes);
+    const deleteSelected = useNotesStore((s) => s.deleteSelected);
+    const clearSelection = useNotesStore((s) => s.clearSelection);
+    useEffect(() => {
+        fetchNotes();
+      }, []);
+      
 
   return (
     <View style={styles.container}>
@@ -74,6 +78,19 @@ const NotesListScreen = () => {
             <Text>Created</Text>
         </Pressable>
     </View>
+    {selectionMode && (
+    <View style={styles.bulkBar}>
+        <Text>{selectedNotes.length} selected</Text>
+
+        <TouchableOpacity onPress={deleteSelected}>
+        <Text style={{ color: 'red' }}>Delete</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={clearSelection}>
+        <Text>Cancel</Text>
+        </TouchableOpacity>
+    </View>
+    )}
       <FlatList
         data={notes}
         keyExtractor={(item) => item.id}
@@ -143,5 +160,15 @@ const styles = StyleSheet.create({
   
   sortActive: {
     backgroundColor: '#007AFF',
+  },
+
+  bulkBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#eee',
+    borderRadius: 8,
+    marginBottom: 10,
   },
 });

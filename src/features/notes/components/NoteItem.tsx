@@ -19,6 +19,11 @@ type NavigationProp = NativeStackNavigationProp<
 const NoteItem = ({ note }: Props) => {
 const deleteNote = useNotesStore((s) => s.deleteNote);
 const navigation = useNavigation<NavigationProp>();
+const selectionMode = useNotesStore((s) => s.selectionMode);
+const selectedNotes = useNotesStore((s) => s.selectedNotes);
+const isSelected = selectedNotes.includes(note.id);
+const toggleSelectionMode = useNotesStore((s) => s.toggleSelectionMode);
+const toggleSelectNote = useNotesStore((s) => s.toggleSelectNote);
 const renderRightActions = () => {
   return (
     <TouchableOpacity
@@ -29,27 +34,45 @@ const renderRightActions = () => {
     </TouchableOpacity>
   );
 };
-  return (
+return (
     <Swipeable renderRightActions={renderRightActions}>
-    <Pressable
-      onPress={() => navigation.navigate('NoteEditor', { note })}
-      style={styles.card}
-    >
-      <Text style={styles.title}>{note.title}</Text>
-
-      {note.content ? (
-        <Text numberOfLines={2} style={styles.preview}>
-          {note.content}
-        </Text>
-      ) : null}
-
-      <View style={styles.footer}>
-        <Text style={styles.date}>
-          {new Date(note.updated_at).toLocaleString()}
-        </Text>
-      </View>
-    </Pressable>
-  </Swipeable>
+      <Pressable
+        onPress={() => {
+          if (selectionMode) {
+            toggleSelectNote(note.id);
+          } else {
+            navigation.navigate('NoteEditor', { note });
+          }
+        }}
+        onLongPress={() => {
+          if (!selectionMode) {
+            toggleSelectionMode();
+          }
+          toggleSelectNote(note.id);
+        }}
+      >
+        <View
+          style={[
+            styles.card,
+            isSelected && styles.selectedCard
+          ]}
+        >
+          <Text style={styles.title}>{note.title}</Text>
+  
+          {note.content ? (
+            <Text numberOfLines={2} style={styles.preview}>
+              {note.content}
+            </Text>
+          ) : null}
+  
+          <View style={styles.footer}>
+            <Text style={styles.date}>
+              {new Date(note.updated_at).toLocaleString()}
+            </Text>
+          </View>
+        </View>
+      </Pressable>
+    </Swipeable>
   );
 };
 
@@ -102,5 +125,11 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'white',
     fontWeight: '600',
+  },
+
+  selectedCard: {
+    borderWidth: 2,
+    borderColor: '#007AFF',
+    backgroundColor: '#EAF2FF',
   },
 });

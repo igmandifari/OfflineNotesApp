@@ -9,8 +9,19 @@ interface NotesState {
   hasMore: boolean;
   searchQuery: string;
 
-  deletedNote?: Note;
+  deletedNotes: Note[];
   undoTimer?: ReturnType<typeof setTimeout>;
+
+  sortBy: 'created' | 'updated';
+  setSortBy: (sort: 'created' | 'updated') => void;
+
+  selectionMode: boolean;
+  selectedNotes: string[];
+
+  toggleSelectionMode: () => void;
+  toggleSelectNote: (id: string) => void;
+  clearSelection: () => void;
+  deleteSelected: () => Promise<void>;
 
   fetchNotes: () => Promise<void>;
   refreshNotes: () => Promise<void>;
@@ -21,10 +32,6 @@ interface NotesState {
 
   deleteNote: (note: Note) => Promise<void>;
   undoDelete: () => void;
-
-  sortBy: 'created' | 'updated';
-  setSortBy: (sort: 'created' | 'updated') => void;
-  
 }
 
 export const useNotesStore = create<NotesState>((set, get) => ({
@@ -34,23 +41,77 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   hasMore: true,
   searchQuery: '',
 
-  deletedNote: undefined,
+  deletedNotes: [],
   undoTimer: undefined,
-  
+
   sortBy: 'updated',
+
+  selectionMode: false,
+  selectedNotes: [],
+
   setSortBy: (sort) => {
     set({ sortBy: sort, page: 0, notes: [] });
     get().fetchNotes();
   },
 
+  toggleSelectionMode: () => {
+    set((state) => ({
+      selectionMode: !state.selectionMode,
+      selectedNotes: [],
+    }));
+  },
+
+  toggleSelectNote: (id) => {
+    set((state) => {
+      const exists = state.selectedNotes.includes(id);
+
+      return {
+        selectedNotes: exists
+          ? state.selectedNotes.filter((n) => n !== id)
+          : [...state.selectedNotes, id],
+      };
+    });
+  },
+
+  clearSelection: () => {
+    set({
+      selectionMode: false,
+      selectedNotes: [],
+    });
+  },
+
+  deleteSelected: async () => {
+    const { selectedNotes, notes } = get();
+  
+    const notesToDelete = notes.filter((n) =>
+      selectedNotes.includes(n.id)
+    );
+  
+    const timer = setTimeout(async () => {
+      for (const note of notesToDelete) {
+        await NotesRepository.deleteNote(note.id);
+      }
+  
+      set({ deletedNotes: [] });
+    }, 5000);
+  
+    set({
+      notes: notes.filter((n) => !selectedNotes.includes(n.id)),
+      deletedNotes: notesToDelete,
+      undoTimer: timer,
+      selectedNotes: [],
+      selectionMode: false,
+    });
+  },
+
   fetchNotes: async () => {
-    const { page, notes, searchQuery,sortBy } = get();
+    const { page, notes, searchQuery, sortBy } = get();
 
     set({ loading: true });
 
     const data = searchQuery
-        ? await NotesRepository.search(searchQuery, page, sortBy)
-        : await NotesRepository.fetchNotes(page, sortBy);
+      ? await NotesRepository.search(searchQuery, page, sortBy)
+      : await NotesRepository.fetchNotes(page, sortBy);
 
     set({
       notes: [...notes, ...data],
@@ -96,29 +157,28 @@ export const useNotesStore = create<NotesState>((set, get) => ({
   deleteNote: async (note) => {
     const timer = setTimeout(async () => {
       await NotesRepository.deleteNote(note.id);
-  
-      set({ deletedNote: undefined });
+      set({ deletedNotes: [] });
     }, 5000);
   
     set((state) => ({
       notes: state.notes.filter((n) => n.id !== note.id),
-      deletedNote: note,
+      deletedNotes: [note],
       undoTimer: timer,
     }));
   },
 
   undoDelete: () => {
-    const { deletedNote, undoTimer } = get();
+    const { deletedNotes, undoTimer } = get();
   
-    if (!deletedNote) return;
+    if (!deletedNotes.length) return;
   
     if (undoTimer) {
       clearTimeout(undoTimer);
     }
   
     set((state) => ({
-      notes: [deletedNote, ...state.notes],
-      deletedNote: undefined,
+      notes: [...deletedNotes, ...state.notes],
+      deletedNotes: [],
       undoTimer: undefined,
     }));
   },
