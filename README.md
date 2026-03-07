@@ -52,7 +52,7 @@ Tests cover storage, state logic, and UI behavior.
 
 ### Search & Sorting
 -   Debounced search
--   Sort by **Created Date** and **Updated Date**
+-   Sort by **Created Date**
 -   Sort by **Last Edited**
 
 ### Offline First Storage
