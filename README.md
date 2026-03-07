@@ -38,6 +38,7 @@ Android
 - npm test
 
 Tests cover storage, state logic, and UI behavior.
+<img width="486" height="219" alt="Screenshot 2026-03-07 at 16 16 02" src="https://github.com/user-attachments/assets/d4e61905-41d1-447c-86d2-c27b74e14cac" />
 
 # Key Features
 
