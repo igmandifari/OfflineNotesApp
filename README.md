@@ -18,22 +18,7 @@ state management, pagination, undo actions, and multi-select operations.
 - Package Manager: npm
 
 # Project Structure
-src
- ├ app
- │   └ navigation
- │
- ├ database
- │   └ migrations
- │   └ Database.ts
- │
- └ features
-     └ notes
-         ├ components
-         ├ screens
-         ├ store
-         ├ repository
-         ├ storage
-         └ types
+<img width="190" height="321" alt="Screenshot 2026-03-08 at 10 21 49" src="https://github.com/user-attachments/assets/538d478a-ef02-4b00-ad39-f2f916913e08" />
 
 # Demo Video Offline Contact App
 ![Screen Recording 2026-03-07 at 15 00 39](https://github.com/user-attachments/assets/484cbbfc-b525-476d-8244-9acfadd7820c)
