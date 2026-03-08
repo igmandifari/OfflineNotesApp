@@ -17,6 +17,24 @@ state management, pagination, undo actions, and multi-select operations.
 - TypeScript: ^5.8.3
 - Package Manager: npm
 
+# Project Structure
+src
+ ├ app
+ │   └ navigation
+ │
+ ├ database
+ │   └ migrations
+ │   └ Database.ts
+ │
+ └ features
+     └ notes
+         ├ components
+         ├ screens
+         ├ store
+         ├ repository
+         ├ storage
+         └ types
+
 # Demo Video Offline Contact App
 ![Screen Recording 2026-03-07 at 15 00 39](https://github.com/user-attachments/assets/484cbbfc-b525-476d-8244-9acfadd7820c)
 
