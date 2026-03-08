@@ -61,11 +61,10 @@ Tests cover storage, state logic, and UI behavior.
 
 ### Sync Status Simulation
 Each note contains a sync status indicator:
-  Status    Meaning
-  --------- ---------------------
-  Pending   waiting to sync
-  Synced    successfully synced
-  Failed    sync failed
+
+  1. Pending = waiting to sync
+  2. Synced = successfully synced
+  3. Failed = sync failed
 
 The app simulates a background sync process to demonstrate how an
 offline-first architecture would behave with a remote backend.
@@ -95,16 +94,14 @@ Tests are included for core layers:
 ------------------------------------------------------------------------
 
 # Technology Stack
-  Technology                     Purpose
-  ------------------------------ ------------------------------
-  React Native CLI               Mobile framework
-  TypeScript                     Static typing
-  SQLite                         Local persistent storage
-  Zustand                        Lightweight state management
-  React Navigation               Screen navigation
-  Jest                           Unit testing
-  React Native Gesture Handler   Swipe gestures
-  Day.js                         Date handling
+  - React Native CLI              
+  - TypeScript                     
+  - SQLite                       
+  - Zustand                       
+  - React Navigation              
+  - Jest                           
+  - React Native Gesture Handler   
+  - Day.js          
 
 ------------------------------------------------------------------------
 
@@ -125,7 +122,7 @@ Storage Layer Direct interaction with SQLite.
 ------------------------------------------------------------------------
 
 # Data Flow
-UI ↓ Zustand Store ↓ Repository ↓ Storage ↓ SQLite
+UI ==> Zustand Store ==> Repository ==> Storage ==> SQLite
 
 This separation ensures the codebase is maintainable, testable, and
 scalable.
@@ -160,6 +157,7 @@ Bulk deletes and individual deletes share the same undo system.
 
 # Sync Simulation
 Flow: Create/Edit Note
+
 Status = Pending,Simulated network request,Synced
 or Failed
 
@@ -167,6 +165,8 @@ Failure cases are randomly simulated to demonstrate retry scenarios.
 
 
 # Notes
-This project focuses on demonstrating: - clean architecture -
-offline-first design - maintainable code structure - scalable mobile
-application patterns
+This project focuses on demonstrating:
+ - clean architecture 
+ - offline design 
+ - maintainable code structure 
+ - scalable mobile application patterns
